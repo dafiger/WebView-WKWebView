@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=320,maximum-scale=1.3,user-scalable=no">
+        <script type="text/javascript">
+            //oc调用
+            var showMsg = function(msg){
+                alert(msg);
+            }
+        
+            //oc拦截
+            function JSCallObjC() {
+                document.location = "JSCallObjCCommand";
+<!--                alert('JS调用OC成功！');-->
+            }
+        
+            //JS调用OC入口1
+            function jsCallOC(action, params) {
+                var url = "jsCallOC://" + action + "?" + params;
+                document.getElementById("returnValue").innerHTML = action + '?' + params;
+                loadURL(url);
+            }
+        
+            //JS调用OC入口2
+            function jsCallOC2(action, params) {
+                var map = {};
+                map["action"] = action;
+                map["params"] = params;
+
+<!--                var msgDic = {-->
+<!--                    "action":action,-->
+<!--                    "params":params-->
+<!--                };-->
+                window.webkit.messageHandlers.JSOCBridge.postMessage(map);
+            }
+        
+            // 传null
+            function scanClick() {
+                window.webkit.messageHandlers.ScanAction.postMessage(null);
+            }
+            // 传字典
+            function shareClick() {
+                window.webkit.messageHandlers.Share.postMessage({title:'测试分享的标题',content:'测试分享的内容',url:'http://www.baidu.com'});
+            }
+            // 传字符串
+            function playSound() {
+                window.webkit.messageHandlers.PlaySound.postMessage('shake_sound_male.wav');
+            }
+            // 传数组
+            function colorClick() {
+                window.webkit.messageHandlers.Color.postMessage([67,205,128,0.5]);
+            }
+        
+            //加载URL
+            function loadURL(url) {
+                window.location.href = url;
+            }
+        </script>
+        <title>HTML title 属性</title>
+</head>
+<body>
+<center>
+    <h2>WebViewJS!</h2>
+    <br/>
+    <input type="button" value="弹出框" onclick="showMsg('弹出框');">
+    <br/><br/>
+    <button onclick="JSCallObjC();">JS调用OC 1</button>
+    <br/><br/>
+    <button onclick="jsCallOC('对应oc方法名', '参数json');">JS调用OC 2</button>
+    <br/><br/>
+    <button onclick="test1('参数1', '参数2', 'abc', 123);">JS调用OC 3</button>
+    <br/><br/>
+    <button onclick="JSOCBridge.jsCallOC('对应oc方法名', '参数json');">JS调用OC 4</button>
+    <br/><br/>
+    <button onclick="jsCallOC2('对应oc方法名', '参数json');">JS调用OC 5</button>
+    <br/><br/>
+    <div id = "returnValue" style = "font-size: 18px; border: 1px dotted; height: 50px;"> </div>
+</center>
+</body>
+</html>
+
